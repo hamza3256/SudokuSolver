@@ -86,7 +86,6 @@ class Grid:
         self.squares[row][col].set_temp(val)
 
     def draw(self):
-        # Draw Grid Lines
         gap = self.width / 9
         for i in range(self.rows+1):
             if i % 3 == 0 and i != 0:
@@ -104,7 +103,6 @@ class Grid:
                 self.squares[i][j].draw(self.solved)
 
     def select(self, row, col):
-        # Reset all other
         for i in range(self.rows):
             for j in range(self.cols):
                 self.squares[i][j].selected = False
@@ -118,10 +116,6 @@ class Grid:
             self.squares[row][col].set_temp(0)
 
     def click(self, pos):
-        """
-        :param: pos
-        :return: (row, col)
-        """
         if pos[0] < self.width and pos[1] < self.height:
             gap = self.width / 9
             x = pos[0] // gap
@@ -250,17 +244,14 @@ def find_empty(bo):
 
 
 def valid(bo, num, pos):
-    # Check row
     for i in range(len(bo[0])):
         if bo[pos[0]][i] == num and pos[1] != i:
             return False
 
-    # Check column
     for i in range(len(bo)):
         if bo[i][pos[1]] == num and pos[0] != i:
             return False
 
-    # Check box
     box_x = pos[1] // 3
     box_y = pos[0] // 3
 
@@ -274,11 +265,11 @@ def valid(bo, num, pos):
 
 def redraw_sudoku(solved, board, time, strikes, check):
     solved.fill(WHITE)
-    # Draw time
+
     fnt = pygame.font.SysFont("sudoku", 40)
     text = fnt.render("Time: " + format_time(time), 1, BLACK)
     solved.blit(text, (540 - 160, 560))
-    # Draw Strikes
+
     text = fnt.render("X " * strikes, 1, DBLUE)
     solved.blit(text, (20, 560))
     if check == 1:
@@ -287,7 +278,7 @@ def redraw_sudoku(solved, board, time, strikes, check):
     elif check == 2:
         text = fnt.render("Failed", 1, DBLUE)
         solved.blit(text, (20, 560))
-    # Draw grid and board
+
     board.draw()
 
 
