@@ -24,6 +24,8 @@ class Grid:
     ]
 
 
+    """
+    """
     # medium difficulty
     board = [
         [7, 8, 0, 4, 0, 0, 1, 2, 0],
@@ -333,7 +335,14 @@ def main():
                         key = None
 
                     if event.key == pygame.K_SPACE:
+                        pygame.event.set_blocked(pygame.MOUSEMOTION)
+                        pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
+                        pygame.event.set_blocked(pygame.MOUSEBUTTONUP)
                         board.solve_visual()
+                        time.sleep(0.5)
+                        pygame.event.set_allowed(pygame.MOUSEMOTION)
+                        pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
+                        pygame.event.set_allowed(pygame.MOUSEBUTTONUP)
 
                     if event.key == pygame.K_RETURN:
                         i, j = board.selected
