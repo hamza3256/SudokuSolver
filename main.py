@@ -6,6 +6,7 @@ LBLUE = (62, 115, 206)
 DBLUE = (9, 49, 153)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
 
 
 class Grid:
@@ -100,7 +101,6 @@ class Grid:
             pygame.draw.line(self.solved, BLACK, (i * gap, 0),
                              (i * gap, self.height), thick)
 
-        # Draw Squares
         for i in range(self.rows):
             for j in range(self.cols):
                 self.squares[i][j].draw(self.solved)
@@ -133,56 +133,8 @@ class Grid:
                 if self.squares[i][j].value == 0:
                     return False
         return True
-    """ 
-    def solve(self):
-        find = find_empty(self.model)
-        if not find:
-            return True
-        else:
-            row, col = find
 
-        for i in range(1, 10):
-            if valid(self.model, i, (row, col)):
-                self.model[row][col] = i
-
-                if self.solve():
-                    return True
-
-                self.model[row][col] = 0
-
-        return False
-
-    def solve_visual(self):
-        self.update_model()
-        find = find_empty(self.model)
-        if not find:
-            return True
-        else:
-            row, col = find
-
-        for i in range(1, 10):
-            if valid(self.model, i, (row, col)):
-                self.model[row][col] = i
-                self.squares[row][col].set(i)
-                self.squares[row][col].draw_change(self.solved, True)
-                self.update_model()
-                pygame.display.update()
-                pygame.time.delay(100)
-
-                if self.solve_visual():
-                    return True
-
-                self.model[row][col] = 0
-                self.squares[row][col].set(0)
-                self.update_model()
-                self.squares[row][col].draw_change(self.solved, False)
-                pygame.display.update()
-                pygame.time.delay(100)
-
-        return False
-    """
-
-    # Solves the sudoku board using Backtracking Algorithm
+    # solves sudoku board using backtracking algorithm
     def solve_visual(self):
         self.update_model()
         grid = find_empty(self.model)
@@ -196,13 +148,11 @@ class Grid:
                 self.model[row][col] = i
                 self.squares[row][col].set(i)
                 self.squares[row][col].draw_change(self.solved, True)
-                # white color background\
                 self.update_model()
                 pygame.display.update()
                 pygame.time.delay(50)
                 if self.solve_visual():
                     return True
-                # white color background\
 
                 self.model[row][col] = 0
                 self.squares[row][col].set(0)
@@ -247,14 +197,19 @@ class Square:
     def draw_change(self, solved, g=True):
         fnt = pygame.font.SysFont("sudoku", 40)
 
-        gap = self.width / 9
+        gap = (self.width / 9)
         x = self.col * gap
         y = self.row * gap
+        pygame.draw.rect(solved, BLACK, (x, y, gap, gap), 0)
 
-        pygame.draw.rect(solved, WHITE, (x, y, gap, gap), 0)
+        gap = gap - 1
+        x = self.col * (gap + 1)
+        y = self.row * (gap + 1)
+
+        pygame.draw.rect(solved, BLACK, (x, y, gap+1, gap+1), 0)
 
         if g:
-            pygame.draw.rect(solved, (0, 255, 0), (x, y, gap, gap), 0)
+            pygame.draw.rect(solved, GREEN, (x, y, gap, gap), 0)
         else:
             pygame.draw.rect(solved, DBLUE, (x, y, gap, gap), 0)
         text = fnt.render(str(self.value), 1, BLACK)
