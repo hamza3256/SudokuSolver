@@ -1,0 +1,1 @@
+![](exampleSolve.gif)
