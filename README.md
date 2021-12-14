@@ -1,1 +1,1 @@
-![](exampleSolve.gif.gif)
+![](exampleSolve.gif)
