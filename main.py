@@ -25,21 +25,21 @@ class Grid:
 
 
     """
-    """
+
     # medium difficulty
     board = [
-        [7, 8, 0, 4, 0, 0, 1, 2, 0],
-        [6, 0, 0, 0, 7, 5, 0, 0, 9],
-        [0, 0, 0, 6, 0, 1, 0, 7, 8],
-        [0, 0, 7, 0, 4, 0, 2, 6, 0],
-        [0, 0, 1, 0, 5, 0, 9, 3, 0],
-        [9, 0, 4, 0, 6, 0, 0, 0, 5],
-        [0, 7, 0, 3, 0, 0, 0, 1, 2],
-        [1, 2, 0, 0, 0, 7, 4, 0, 0],
-        [0, 4, 9, 2, 0, 6, 0, 0, 7]
+        [0, 0, 3, 0, 0, 7, 1, 6, 0],
+        [0, 0, 7, 0, 2, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 3, 0, 0, 8],
+        [1, 7, 0, 4, 0, 0, 3, 9, 0],
+        [9, 0, 4, 1, 6, 5, 2, 0, 7],
+        [0, 5, 8, 0, 0, 9, 0, 1, 4],
+        [4, 0, 0, 7, 0, 0, 8, 0, 0],
+        [0, 0, 0, 0, 4, 0, 5, 0, 0],
+        [0, 6, 9, 5, 0, 0, 4, 0, 0]
     ]
-    """
 
+    """
     # hard difficulty
     board = [
         [7, 0, 4, 0, 0, 0, 6, 0, 0],
@@ -52,6 +52,7 @@ class Grid:
         [0, 0, 2, 0, 0, 0, 0, 0, 0],
         [1, 0, 7, 0, 8, 3, 0, 0, 0]
     ]
+    """
 
     def __init__(self, rows, cols, width, height, solved):
         self.rows = rows
@@ -132,7 +133,7 @@ class Grid:
                 if self.squares[i][j].value == 0:
                     return False
         return True
-
+    """ 
     def solve(self):
         find = find_empty(self.model)
         if not find:
@@ -178,6 +179,37 @@ class Grid:
                 pygame.display.update()
                 pygame.time.delay(100)
 
+        return False
+    """
+
+    # Solves the sudoku board using Backtracking Algorithm
+    def solve_visual(self):
+        self.update_model()
+        grid = find_empty(self.model)
+        if not grid:
+            return True
+        else:
+            row, col = grid
+        pygame.event.pump()
+        for i in range(1, 10):
+            if valid(self.model, i, (row, col)) == True:
+                self.model[row][col] = i
+                self.squares[row][col].set(i)
+                self.squares[row][col].draw_change(self.solved, True)
+                # white color background\
+                self.update_model()
+                pygame.display.update()
+                pygame.time.delay(50)
+                if self.solve_visual():
+                    return True
+                # white color background\
+
+                self.model[row][col] = 0
+                self.squares[row][col].set(0)
+                self.update_model()
+                self.squares[row][col].draw_change(self.solved, False)
+                pygame.display.update()
+                pygame.time.delay(50)
         return False
 
 
@@ -300,77 +332,66 @@ def main():
     run = True
     start = time.time()
     strikes = 0
-    check_solved = False
     result = 0
     while run:
+        game_clock = round(time.time() - start)
 
-        if not check_solved:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1 or event.key == pygame.K_KP1:
+                    key = 1
+                if event.key == pygame.K_2 or event.key == pygame.K_KP2:
+                    key = 2
+                if event.key == pygame.K_3 or event.key == pygame.K_KP3:
+                    key = 3
+                if event.key == pygame.K_4 or event.key == pygame.K_KP4:
+                    key = 4
+                if event.key == pygame.K_5 or event.key == pygame.K_KP5:
+                    key = 5
+                if event.key == pygame.K_6 or event.key == pygame.K_KP6:
+                    key = 6
+                if event.key == pygame.K_7 or event.key == pygame.K_KP7:
+                    key = 7
+                if event.key == pygame.K_8 or event.key == pygame.K_KP8:
+                    key = 8
+                if event.key == pygame.K_9 or event.key == pygame.K_KP9:
+                    key = 9
+                if event.key == pygame.K_DELETE:
+                    board.clear()
+                    key = None
 
-            game_clock = round(time.time() - start)
+                if event.key == pygame.K_SPACE:
+                    pygame.event.pump()
+                    board.solve_visual()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_1 or event.key == pygame.K_KP1:
-                        key = 1
-                    if event.key == pygame.K_2 or event.key == pygame.K_KP2:
-                        key = 2
-                    if event.key == pygame.K_3 or event.key == pygame.K_KP3:
-                        key = 3
-                    if event.key == pygame.K_4 or event.key == pygame.K_KP4:
-                        key = 4
-                    if event.key == pygame.K_5 or event.key == pygame.K_KP5:
-                        key = 5
-                    if event.key == pygame.K_6 or event.key == pygame.K_KP6:
-                        key = 6
-                    if event.key == pygame.K_7 or event.key == pygame.K_KP7:
-                        key = 7
-                    if event.key == pygame.K_8 or event.key == pygame.K_KP8:
-                        key = 8
-                    if event.key == pygame.K_9 or event.key == pygame.K_KP9:
-                        key = 9
-                    if event.key == pygame.K_DELETE:
-                        board.clear()
+                if event.key == pygame.K_RETURN:
+                    i, j = board.selected
+                    if board.squares[i][j].temp != 0:
+                        if board.place(board.squares[i][j].temp):
+                            print("Success")
+                            result = 1
+                        else:
+                            print("Wrong")
+                            result = 2
+                            strikes += 1
                         key = None
+                        if board.is_finished():
+                            print("Game over")
 
-                    if event.key == pygame.K_SPACE:
-                        pygame.event.set_blocked(pygame.MOUSEMOTION)
-                        pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
-                        pygame.event.set_blocked(pygame.MOUSEBUTTONUP)
-                        board.solve_visual()
-                        time.sleep(0.5)
-                        pygame.event.set_allowed(pygame.MOUSEMOTION)
-                        pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
-                        pygame.event.set_allowed(pygame.MOUSEBUTTONUP)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                clicked = board.click(pos)
+                if clicked:
+                    board.select(clicked[0], clicked[1])
+                    key = None
 
-                    if event.key == pygame.K_RETURN:
-                        i, j = board.selected
-                        if board.squares[i][j].temp != 0:
-                            if board.place(board.squares[i][j].temp):
-                                print("Success")
-                                result = 1
-                            else:
-                                print("Wrong")
-                                result = 2
-                                strikes += 1
-                            key = None
-                            if board.is_finished():
-                                print("Game over")
-                                check_solved = True
+        if board.selected and key != None:
+            board.sketch(key)
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    clicked = board.click(pos)
-                    if clicked:
-                        board.select(clicked[0], clicked[1])
-                        key = None
-
-            if board.selected and key != None:
-                board.sketch(key)
-
-            redraw_sudoku(solved, board, game_clock, strikes, result)
-            pygame.display.update()
+        redraw_sudoku(solved, board, game_clock, strikes, result)
+        pygame.display.update()
 
 
 main()
